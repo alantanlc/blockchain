@@ -56,6 +56,16 @@ class Block {
 
         console.log("Block mined: " + this.hash);
     }
+
+    hasValidTransactions() {
+        for (const tx of this.transactions) {
+            if (!tx.isValid()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 class Blockchain {
@@ -112,6 +122,10 @@ class Blockchain {
         for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i-1];
+
+            if (!currentBlock.hasValidTransactions()) {
+                return false;
+            }
 
             if (currentBlock.hash !== currentBlock.calculateHash()) {
                 return false;
