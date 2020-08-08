@@ -13,3 +13,29 @@ class Block {
         return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
     }
 }
+
+class Blockchain {
+    constructor() {
+        this.chain = [this.createGenesisBlock()];
+    }
+
+    createGenesisBlock() {
+        return new Block(0, "01/01/2020", "Genesis block", "0");
+    }
+
+    getLatestBlock() {
+        return this.chain[this.chain.length - 1];
+    }
+
+    addBlock(newBlock) {
+        newBlock.previousHash = this.getLatestBlock().hash;
+        newBlock.hash = newBlock.calculateHash();
+        this.chain.push(newBlock);
+    }
+}
+
+let coin = new Blockchain();
+coin.addBlock(new Block(1, "10/08/2020", { amount: 4 }));
+coin.addBlock(new Block(2, "12/08/2020", { amount: 10 }));
+
+console.log(JSON.stringify(coin, null, 4));
